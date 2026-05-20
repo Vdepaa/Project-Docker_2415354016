@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    image: app-good           
+    container_name: khan-app
+    ports:
+      - "3000:3000"  # Langsung mengunci port 3000
+    environment:
+      APP_PORT: 3000
+      DB_HOST: mysql
+      DB_USER: depkanh
+      DB_PASSWORD: khankhin
+      DB_NAME: depa_users_db
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: khankhin
+      MYSQL_DATABASE: depa_users_db
+      MYSQL_USER: depkanh      
+      MYSQL_PASSWORD: khankhin
+    ports:
+      - "3307:3306"             
+    volumes:
+      - mysql-data:/var/lib/mysql 
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-app
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql           
+    depends_on:
+      - mysql 
+
+volumes:
+  mysql-data:
